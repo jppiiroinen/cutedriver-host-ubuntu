@@ -1,0 +1,24 @@
+#!/bin/bash
+##############################################################
+#
+# A helper script for testing the new cutedriver installation.
+#
+# Executes one test for qml project and
+# another one for widgets project.
+#
+# Author: Juhapekka Piiroinen <juhapekka.piiroinen@link-motion.com>
+# (C) 2016 Link Motion Oy
+##############################################################
+qttasserver &
+QTTAS_PID=$!
+
+APPS="helloworld-qml helloworld-widgets"
+
+for APP in ${APPS}; do
+  echo "Running tests.."
+    ./test-helloworld.rb ${APP}/${APP}
+  echo "done"
+done
+
+kill -s 9 ${QTTAS_PID}
+

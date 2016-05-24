@@ -1,0 +1,43 @@
+#!/bin/bash
+###################################################################
+#
+# This script will download cutedriver agent and install it.
+#
+# Author: Juhapekka Piiroinen <juhapekka.piiroinen@link-motion.com>
+# (C) Link Motion Oy
+####################################################################
+set -e
+
+echo
+echo "This script will download and install cutedriver agent."
+echo
+echo "Press <enter> to continue, or ctrl+c to cancel."
+read
+
+mkdir -p .tmp
+pushd .tmp
+  if [[ ! -d cutedriver-agent_qt ]]; then
+    git clone https://github.com/nomovok-opensource/cutedriver-agent_qt.git
+  fi
+  sudo apt-get install x11proto-xext-dev libxtst-dev
+  pushd cutedriver-agent_qt
+    qmake -r CONFIG+=no_mobility CONFIG+=no_webkit
+    make
+    sudo make install
+  popd
+popd
+
+# create required paths for logging
+sudo mkdir -p /logs/testability
+sudo chown ${USER}:${USER} /logs/testability
+
+# copy the test configuration
+cp tdriver_parameters.xml /etc/tdriver
+
+# test the local installation
+pushd tests
+  qmake -r
+  make
+  make check
+popd
+

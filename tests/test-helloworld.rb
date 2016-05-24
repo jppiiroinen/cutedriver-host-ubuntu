@@ -1,0 +1,32 @@
+#!/usr/bin/ruby
+require 'test/unit'
+require 'tdriver'
+include TDriverVerify
+require "test/unit"
+
+APPNAME = ARGV[0]
+
+class TestHelloWorld < Test::Unit::TestCase
+  def setup
+    @sut = TDriver.sut(:sut_local)
+    @app = @sut.run( :name => "#{APPNAME}", :arguments => "-testability", :sleeptime => 2 )
+    @mainWindow = @app.child( :name => "MainWindow" )
+    verify(1, "MainWindow was found") { @mainWindow }
+  end
+
+  def test_smoke
+    verify_equal("label", 1, "default label text'") {
+      @mainWindow.child( :name => 'label' )['text']
+    }
+    
+    verify { @mainWindow.child( :name => 'pushButton').tap }
+
+    verify_equal("Clicked", 1, "label changed") {
+      @mainWindow.child( :name => 'label')['text']
+    }
+  end
+
+  def teardown
+    @app.kill
+  end
+end
