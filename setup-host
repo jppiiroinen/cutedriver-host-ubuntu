@@ -1,0 +1,48 @@
+#!/bin/bash
+###################################################################
+#
+# This script will download cutedriver and compile it.
+#
+# Author: Juhapekka Piiroinen <juhapekka.piiroinen@link-motion.com>
+# (C) Link Motion Oy
+####################################################################
+set -e
+
+echo
+echo "This script will download and install Ruby 2.1 and"
+echo "required libraries and tools for using cutedriver."
+echo
+echo "Press <enter> to continue, or ctrl+c to cancel."
+read
+
+mkdir -p .tmp
+pushd .tmp
+  sudo apt-get install git
+  sudo apt-get build-dep ruby
+  wget https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.10.tar.bz2
+  tar xvf ruby-2.1.10.tar.bz2
+  pushd ruby-2.1.10
+    ./configure
+    make
+    sudo make install
+  popd
+
+  git clone https://github.com/nomovok-opensource/cutedriver-driver.git
+  pushd cutedriver-driver
+   rake gem
+   sudo gem install pkg/cutedriver*.gem
+  popd
+
+  git clone https://github.com/nomovok-opensource/cutedriver-sut_qt
+  pushd cutedriver-sut_qt
+    rake gem
+    sudo gem install pkg/cutedriver*.gem
+  popd
+
+  git clone https://github.com/nomovok-opensource/cutedriver-visualizer.git
+  pushd cutedriver-visualizer
+    qmake -r
+    make
+    sudo make install
+  popd
+popd
