@@ -22,3 +22,4 @@ done
 
 kill -s 9 ${QTTAS_PID}
 
+exit 0

@@ -1,14 +1,13 @@
 #!/usr/bin/ruby
-require 'test/unit'
+require 'minitest/autorun'
 require 'tdriver'
 include TDriverVerify
-require "test/unit"
 
 APPNAME = ARGV[0]
 
-class TestHelloWorld < Test::Unit::TestCase
+class TestHelloWorld < MiniTest::Test
   def setup
-    @sut = TDriver.sut(:sut_local)
+    @sut = TDriver.sut(:sut_qt)
     @app = @sut.run( :name => "#{APPNAME}", :arguments => "-testability", :sleeptime => 2 )
     @mainWindow = @app.child( :name => "MainWindow" )
     verify(1, "MainWindow was found") { @mainWindow }

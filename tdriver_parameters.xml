@@ -1,5 +1,5 @@
 <parameters>
-  <sut id="sut_local" template="qt">
+  <sut id="sut_qt" template="qt">
     <parameter name="qttas_server_ip" value="127.0.0.1" />
     <parameter name="qttas_server_port" value="55535" />
   </sut>
